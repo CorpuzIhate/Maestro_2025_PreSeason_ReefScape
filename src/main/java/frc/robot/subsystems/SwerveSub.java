@@ -7,40 +7,24 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.kinematics.proto.SwerveModulePositionProto;
-import edu.wpi.first.math.proto.Kinematics;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import java.io.FilePermission;
-
-import org.littletonrobotics.junction.Logger;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
-
-
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.DriverStation;
-
 
 
 
 
 public class SwerveSub extends SubsystemBase {
     public final SwerveModule frontRight = new SwerveModule(
-            DriveConstants.kFrontRightDriveMotorPort,
+            DriveConstants.kFrontRightDriveMotorPort, // 7
             DriveConstants.kFrontRightTurningMotorPort,
             DriveConstants.kFrontRightDriveEncoderReversed,
             DriveConstants.kFrontRightTurningEncoderReversed,
@@ -56,9 +40,6 @@ public class SwerveSub extends SubsystemBase {
             DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
-
-
-
 
     public final SwerveModule backRight = new SwerveModule(
             DriveConstants.kBackRightDriveMotorPort,
@@ -77,9 +58,7 @@ public class SwerveSub extends SubsystemBase {
             DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
             DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
             DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
-    private final SwerveModuleState[] mySwerveStates = new SwerveModuleState[]{ // used for debugging to Adavantage Scope
-        frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState()
-    };
+
 
 
     private final SwerveModule swerveModules[] = new SwerveModule[]{
@@ -87,16 +66,13 @@ public class SwerveSub extends SubsystemBase {
         backLeft, backRight
     };
 
-    private Field2d field = new Field2d();
 
-
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, 
-    new Rotation2d(0), getModulePositionsAuto() );
 
 
     
     private final AHRS gyro = new AHRS(SerialPort.Port.kUSB1);
-
+    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
+     getRotation2d(), getModulePositionsAuto());
 
 
 
@@ -112,18 +88,17 @@ public class SwerveSub extends SubsystemBase {
         }
         }).start();
 
-        zeroHeading();  
-        
-          AutoBuilder.configureHolonomic(
+        zeroHeading();
+       AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    4.5, // Max module speed, in m/s
-                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                    new PIDConstants(1.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(1.0, 0.0, 0.0), // Rotation PID constants
+                    2.5, // Max module speed, in m/s
+                    0.46, // Drive base radius in meters. Distance from robot center to furthest module.
                     new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
             () -> {
@@ -138,26 +113,18 @@ public class SwerveSub extends SubsystemBase {
               return false;
             },
             this // Reference to this subsystem to set requirements
-    );
+    );  
+        
 
     
     }
     @Override
     public void periodic(){
-
-        odometer.update(getRotation2d(),  getModulePositionsAuto()
-        );
+ 
 
         SmartDashboard.putNumber("robot Heading", getHeading());
-        SmartDashboard.putString("robot location", getPose().getTranslation().toString());
 
 
-        SwerveModulePosition[] debugModulePosition = getModulePositionsAuto();
-        for(int i = 0; i <= 3; ++i){
-            SmartDashboard.putString("SwerveModulePostions [" + i + "]" , "distance : " + debugModulePosition[i].distanceMeters
-            + "Speeds : " + debugModulePosition[i].angle);
-
-        Logger.recordOutput("pose2d", getPose());
 
         SmartDashboard.putNumber("SwerveModuleTurningPostions [" + 1 + "]" ,  frontLeft.getTurningPositon());
         SmartDashboard.putNumber("SwerveModuleTurningPostions [" + 2 + "]" ,  frontRight.getTurningPositon());
@@ -167,8 +134,7 @@ public class SwerveSub extends SubsystemBase {
 
 
 
-}
-        Logger.recordOutput("heading",getHeading());
+
       
 
 
@@ -179,59 +145,38 @@ public class SwerveSub extends SubsystemBase {
         backLeft.sendToDashboard();
         backRight.sendToDashboard();
     }
-    public Pose2d getPose(){
-        return odometer.getPoseMeters();
-    } 
-    public void resetPose(Pose2d pose){
-        odometer.resetPosition(gyro.getRotation2d(), getModulePositionsAuto() , pose);
-    }
+
      public ChassisSpeeds getSpeeds() {
          return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates()); 
     }
 
 
-    public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
-        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-
-        SwerveModuleState[] targetStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
-        setModuleStates(targetStates);
-    }
+ 
 
 
 
 
     public void setModuleStates(SwerveModuleState[] desiredStates){
+
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    // proportaionally decreases the change the speeds so driver always had control of robot
+    // proportaionally decreases the change the speeds so driver always has control of robot
         frontRight.setDesiredState(desiredStates[0]);        
         frontLeft.setDesiredState(desiredStates[1]); //1 
         backRight.setDesiredState(desiredStates[2]); //2                     
         backLeft.setDesiredState(desiredStates[3]); // 3
 
-
-
-        //ouputs to Adavantage Log
-
-        // log desired states is an array that orders the desired states in the order 
-        // Advantage Log wants ( FL,FR, BL, BR )
-        SwerveModuleState[] LogDesiredStates = new SwerveModuleState[]{desiredStates[1], desiredStates[0],
-         desiredStates[3], desiredStates[2]};
-
-
-        Logger.recordOutput("CurrentStates", mySwerveStates);
-        Logger.recordOutput("DesiredStates",LogDesiredStates);
     
     }
 
-// get positions
-public SwerveModulePosition[] getModulePositionsAuto() { // not updating
-    SwerveModulePosition[] positions = new SwerveModulePosition[swerveModules.length];
-    for (int i = 0; i < swerveModules.length; i++) {
-      positions[i] = swerveModules[i].getSwerveModulePosition();
-    }
-    return positions;
-  }
 
+    // get positions
+        public SwerveModulePosition[] getModulePositionsAuto() {
+        SwerveModulePosition[] positions = new SwerveModulePosition[swerveModules.length];
+        for (int i = 0; i < swerveModules.length; i++) {
+        positions[i] = swerveModules[i].getSwerveModulePosition();
+        }
+        return positions;
+    }
 
     public void zeroHeading(){
         gyro.reset();
@@ -244,16 +189,15 @@ public SwerveModulePosition[] getModulePositionsAuto() { // not updating
     public Rotation2d getRotation2d(){
         return Rotation2d.fromDegrees(getHeading());
     } // converts into Rotation2d
+     public Pose2d getPose(){
 
+        return odometer.getPoseMeters();
 
-
-
-
-
-
-
+    }
+    public void resetOdometry(Pose2d pose){
+        odometer.resetPosition(getRotation2d(), getModulePositionsAuto(), pose);
+    }
     
-
 
       public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[swerveModules.length];
@@ -262,6 +206,15 @@ public SwerveModulePosition[] getModulePositionsAuto() { // not updating
         }
         return states;
       }
+
+
+      public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
+        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+        SwerveModuleState[] targetStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
+        setModuleStates(targetStates);
+    }
+
 
 
 
