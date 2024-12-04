@@ -145,7 +145,7 @@ public class RobotContainer {
 
 
 
-    return new PathPlannerAuto("test_2024_02_29");
+    return new PathPlannerAuto("auto_2024_02_29");
 
 
   // return new PathPlannerAuto("test");
