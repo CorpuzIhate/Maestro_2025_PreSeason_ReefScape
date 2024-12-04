@@ -17,7 +17,7 @@ import frc.robot.subsystems.LimeLightSub;
  
 
 public class SwerveJoystickCmd extends Command {
-  /** Creates a new SwerveJoystickCmd. */
+
       private final SwerveSub swerveSubsystem;
       private final LimeLightSub limeLightSub;
 
