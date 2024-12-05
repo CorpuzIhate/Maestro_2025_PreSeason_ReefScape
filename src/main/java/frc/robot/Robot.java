@@ -16,8 +16,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.MoveIntakeArmCMD;
-import frc.robot.commands.SwerveJoystickCmd;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -73,31 +72,20 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
+
     CommandScheduler.getInstance().run();
 
 
-
-    SmartDashboard.putNumber("x speed", SwerveJoystickCmd.CurrentXSpeed);
-    SmartDashboard.putNumber("y speed", SwerveJoystickCmd.CurrentYSpeed);
-    SmartDashboard.putNumber("turning speed", SwerveJoystickCmd.CurrentTurningSpeed);
-
-    SmartDashboard.putBoolean("Field Relative Orientation?", SwerveJoystickCmd.CurrentOrientation);
-    //SmartDashboard.putString("SwerveModules", SwerveJoystickCmd.CurrentModuleStates.toString());
-
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
+
   @Override
   public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+
   @Override
   public void autonomousInit() {
     SmartDashboard.putString("Auto on?", "yes");

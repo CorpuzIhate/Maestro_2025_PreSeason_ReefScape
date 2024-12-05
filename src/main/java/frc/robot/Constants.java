@@ -29,6 +29,7 @@ public final class Constants {
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kTurning = 0.25; //changed from 0.5
+    
   }
    public static final class DriveConstants {
 
@@ -93,25 +94,14 @@ public final class Constants {
         public static final int kDriverXAxis = 0;
         public static final int kDriverYAxis = 1;
         public static final int kDriverRotAxis = 4;
-      
-        public static final int kDriverIndexerIntakeAxis = 2; 
-        public static final int kDriverIndexerOutakeAxis = 3; 
-
+  
 
         public static final int kDriverFieldOrientedButtonIdx = 1;
 
         public static final int kDriveGyroResetButtonIdx = 2;
       
-        public static final int kDriveIntakeButtonIdx = 3;
-        public static final int kDriveOutakeButtonIdx = 4;
-        public static final int kDriveLimeOrientButtonIdx = 5;
-        public static final int kDriveShooterButtonIdx = 6;
 
-        public static final int kMoveIntakeArmToUpPosButtonIdx  = 7;
-        public static final int kMoveIntakeArmToDownPosButtonIdx  = 8;
-        public static final int kMoveIntakeArmToMidPosButtonIdx  = 9;
-
-        public static final int kIndexerButtonIdx  = 1;// temperory value not FINAL
+        public static final int kIndexerButtonIdx  = 1;
 
 
 
@@ -120,35 +110,7 @@ public final class Constants {
 
     }
 
-    public static final class IntakeConstants {
-      public static final double kIntakeSpeed = 0.5;
-      public static final int kIntakeMotorID = 9;
-      public static final int kLeftIntakeArmMotorID = 11;
-      public static final int kRightIntakeArmMotorID = 12;
-      public static final int kIntakeArmEncoderPort = 0; //DIO port; White Red Black (white closest to RIO)
 
-      public static final int kThroughBoreEncoderTicks = 8192;
-      public static final double kIntakeArmDownPosSetpoint = 0.52;
-      public static final double kIntakeArmMidPosSetpoint = 0.65;
-      public static final double kIntakeArmUpPosSetpoint = 0.65;
-    
-      public static final double kIntakeArmMaxSpeed = 0.7; //(x percent speed)
-    
-
-      public static final double kArmP = 0.8;
-      public static final double kArmI = 0;
-      public static final double kArmD = 0;
-
-
-
-    }
-    public static final class ShooterConstants{
-      public static final int kUpperShooterMotorID = 14;
-      public static final int kLowerShooterPort = 13;
-      public static final double kShooterSpeed = 1;
-    
-      
-    }
     public static final class AutoConstants {
       public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 6;
       public static final double kMaxAngularSpeedRadiansPerSecond = //
@@ -165,33 +127,9 @@ public final class Constants {
                       kMaxAngularAccelerationRadiansPerSecondSquared);
   }
 
-  public static class LimeLightConsants{
 
-    public static final double Kp = -0.1f;
-
-    public static final double minCommand = 0.05f;
-
-    
-    //d = (h2-h1) / tan(a1+a2)
-
-
-    // how many degrees back is your limelight rotated from perfectly vertical?
-    public static final double limelightMountAngleDegrees = 25.0; //a1
-
-    // distance from the center of the Limelight lens to the floor
-    public static double limelightLensHeightInches = 20.0;  //h1
-
-    // distance from the target to the floor
-    public static double goalHeightInches = 60.0; // h2 
-
-
-
-
-  }
   public static class IndexerConstants {
     public static final int kIndexerPWMPort = 2;
-
-  
     
   }
 }

@@ -13,20 +13,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSub;
-import frc.robot.subsystems.LimeLightSub;
+
  
 
 public class SwerveJoystickCmd extends Command {
 
       private final SwerveSub swerveSubsystem;
-      private final LimeLightSub limeLightSub;
+
 
       public final Supplier<Double> xSpdFunction;
       public final Supplier<Double> ySpdFunction;
       public final Supplier<Double> turningSpdFunction;
       public final Supplier<Boolean> fieldOrientedFunction;
       private final SlewRateLimiter xLimiter, yLimiter, turningLimiter; // slew rate limiter cap the the amount of change of a value
-      public final Supplier<Boolean> limeTargetAccessed;
+
       
       public static double CurrentXSpeed;
       public static double CurrentYSpeed;
@@ -34,16 +34,16 @@ public class SwerveJoystickCmd extends Command {
       public static boolean CurrentOrientation;
       
   public SwerveJoystickCmd(
-          SwerveSub swerveSubsystem, LimeLightSub limeLightSub,
+          SwerveSub swerveSubsystem, 
           Supplier <Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction,
-          Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> limeTargetAccessed) { // Supplier<Boolean> limeTargetAccessed//
+          Supplier<Boolean> fieldOrientedFunction) { // Supplier<Boolean> limeTargetAccessed//
+        
         this.swerveSubsystem = swerveSubsystem;
-        this.limeLightSub = limeLightSub;
         this.xSpdFunction = xSpdFunction;
         this.ySpdFunction = ySpdFunction;
         this.turningSpdFunction = turningSpdFunction;
         this.fieldOrientedFunction = fieldOrientedFunction;
-        this.limeTargetAccessed = limeTargetAccessed;
+
 
 
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -87,10 +87,6 @@ public class SwerveJoystickCmd extends Command {
           xspeed, -yspeed, -turningSpeed, swerveSubsystem.getRotation2d());
 
       }
-    else if(limeTargetAccessed.get()){//limelight target oriented
-       turningSpeed = limeLightSub.steerMotorToTarget(turningSpeed);
-       chassisSpeeds = new ChassisSpeeds(xspeed,-yspeed, -turningSpeed); 
-    }
       else{ // robot oriented
       chassisSpeeds = new ChassisSpeeds(xspeed,-yspeed, -turningSpeed); //hard coded -s
       }
