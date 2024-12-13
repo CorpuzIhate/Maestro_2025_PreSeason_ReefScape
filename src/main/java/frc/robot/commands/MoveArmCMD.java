@@ -9,14 +9,14 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.ArmSub;
 
 public class MoveArmCMD extends Command{
-    private final ArmSub armSub; 
-    private final CANSparkMax armMotor;
-    private final PIDController armController;
-    private final RelativeEncoder armEncoder;
+    public final ArmSub armSub; 
+    public final CANSparkMax armMotor;
+    public final PIDController armController;
+    public final RelativeEncoder armEncoder;
 
     private final int setpoint = 100;
     
-    MoveArmCMD(ArmSub armSub){
+    public MoveArmCMD(ArmSub armSub){
         this.armSub = armSub;
         armController = armSub.getPIDController();
         armMotor = armSub.getMotor();

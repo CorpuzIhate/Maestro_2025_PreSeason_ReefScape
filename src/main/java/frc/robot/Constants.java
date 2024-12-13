@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import javax.swing.undo.StateEdit;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -113,6 +115,10 @@ public final class Constants {
         
     public static final class ArmConstants {
       public static final int kArmMotorPort = 13;
+      public static final int kP = 1;
+      public static final int kI = 0;
+      public static final int kD = 0;
+      
     } 
 
 

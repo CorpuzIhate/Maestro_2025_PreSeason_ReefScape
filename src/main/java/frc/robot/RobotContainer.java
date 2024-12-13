@@ -5,19 +5,24 @@
 package frc.robot;
 
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.MoveArmCMD;
 import frc.robot.commands.SwerveJoystickCmd;
 
 
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
+import frc.robot.subsystems.ArmSub;
 import frc.robot.subsystems.SwerveSub;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 
 
@@ -29,6 +34,14 @@ public class RobotContainer {
 
 
   private final SwerveSub swerveSub =  new SwerveSub();
+  private final ArmSub armsub = new ArmSub(
+    ArmConstants.kArmMotorPort,
+    new PIDController(
+      ArmConstants.kP,
+      ArmConstants.kI , 
+      ArmConstants.kD ) 
+
+  );
 
   private final Joystick driverJoyStick = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -36,7 +49,7 @@ public class RobotContainer {
 
 
   public RobotContainer() {
-    
+    MoveArmCMD moveArmCMD = new MoveArmCMD(armsub);
     
 
     // Configure the trigger bindings
@@ -47,7 +60,7 @@ public class RobotContainer {
       () -> driverJoyStick.getRawAxis(OIConstants.kDriverRotAxis),
       () -> !driverJoyStick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx))); // by defualt will work on fields reference frame
     
-
+    
 
     configureBindings();
   }
