@@ -88,6 +88,7 @@ public final class Constants {
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
     }
+    
     public static final class OIConstants {
         public static final int kDriverControllerPort = 0;
 
@@ -109,6 +110,10 @@ public final class Constants {
 
 
     }
+        
+    public static final class ArmConstants {
+      public static final int kArmMotorPort = 13;
+    } 
 
 
     public static final class AutoConstants {
