@@ -26,6 +26,7 @@ public class MoveArmCMD extends Command{
 
     @Override
     public void initialize(){
+
         armMotor.stopMotor();
         armMotor.set(0);
     }
@@ -39,6 +40,9 @@ public class MoveArmCMD extends Command{
     }
     @Override
     public boolean isFinished(){
+        if (armController.atSetpoint()){
+            return true;
+        }
         return false;
     }
 }
