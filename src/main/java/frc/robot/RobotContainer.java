@@ -17,13 +17,16 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.ArmSub;
 import frc.robot.subsystems.SwerveSub;
 
+import com.fasterxml.jackson.core.io.IOContext;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
@@ -34,14 +37,7 @@ public class RobotContainer {
 
 
   private final SwerveSub swerveSub =  new SwerveSub();
-  private final ArmSub armsub = new ArmSub(
-    ArmConstants.kArmMotorPort,
-    new PIDController(
-      ArmConstants.kP,
-      ArmConstants.kI , 
-      ArmConstants.kD ) 
-
-  );
+  private final ArmSub armsub = new ArmSub();
 
   private final Joystick driverJoyStick = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -49,7 +45,7 @@ public class RobotContainer {
 
 
   public RobotContainer() {
-    MoveArmCMD moveArmCMD = new MoveArmCMD(armsub);
+    
     
 
     // Configure the trigger bindings
@@ -60,14 +56,15 @@ public class RobotContainer {
       () -> driverJoyStick.getRawAxis(OIConstants.kDriverRotAxis),
       () -> !driverJoyStick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx))); // by defualt will work on fields reference frame
     
+      
+    // armsub.setArmSpeed(0.5);
     
-
     configureBindings();
   }
 
 
   private void configureBindings() {
-
+    new JoystickButton(driverJoyStick, OIConstants.kIndexerButtonIdx ).whileTrue(new MoveArmCMD(armsub));
   }
 
 
