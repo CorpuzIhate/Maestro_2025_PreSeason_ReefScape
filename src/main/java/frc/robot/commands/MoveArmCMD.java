@@ -28,6 +28,7 @@ public class MoveArmCMD extends Command{
 
     @Override
     public void initialize(){
+
         armMotor.stopMotor();
         armMotor.set(0);
         
@@ -39,11 +40,8 @@ public class MoveArmCMD extends Command{
         armSub.setArmSpeed(output);
         
     }
-      // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
-
-
+    @Override
+    public boolean isFinished(){
+        return false;
+    }
 }
