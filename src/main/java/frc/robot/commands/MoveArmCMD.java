@@ -13,7 +13,6 @@ public class MoveArmCMD extends Command{
     public final ArmSub armSub; 
     public final CANSparkMax armMotor;
     public final PIDController armController;
-    public final RelativeEncoder armEncoder;
 
     private final int setpoint = 300;
     
@@ -21,23 +20,26 @@ public class MoveArmCMD extends Command{
         this.armSub = armSub;
         armController = armSub.getPIDController();
         armMotor = armSub.getMotor();
-        armEncoder = armMotor.getEncoder();
         addRequirements(armSub);
         
     }
 
     @Override
     public void initialize(){
+        
 
         armMotor.stopMotor();
         armMotor.set(0);
         
     }
 
+    
     @Override
     public void execute(){
-        double output = armController.calculate(armEncoder.getPosition(), setpoint);
-        armSub.setArmSpeed(output);
+        double output = armController.calculate(armSub.getGetArmEncoder().getAbsolutePosition(), setpoint);
+        SmartDashboard.putNumber("armPosition_ticks", armSub.getGetArmEncoder().getAbsolutePosition());
+        SmartDashboard.putNumber("armPowerOutput_PercentOfPower",output);
+        armSub.setArmSpeed(1);
         
     }
     @Override
